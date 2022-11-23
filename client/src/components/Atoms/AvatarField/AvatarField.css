@@ -1,0 +1,26 @@
+
+.avater_area {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.avater_content {
+    margin-left: 0.6rem;
+}
+
+.avater_content > div:first-child {
+    font-weight: bold;
+}
+
+.avater_content > div:last-child >span {
+    color:#8c8c8c;
+    margin-left: 0.4rem;
+}
+
+
+@media only screen and (max-width: 980px) {
+    .avater_area {
+        font-size: 0.8rem;
+    }
+}

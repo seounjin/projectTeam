@@ -20,11 +20,18 @@
 }
 
 
+.ant-checkbox-wrapper{
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+
 .posts_list {
     display: flex;
     list-style: none;
-    
     flex-direction: column;
+    height: 100%;
 }
 
 
@@ -32,10 +39,14 @@
     border-top: 1px solid #cacccc;
 }
 
-.post_area {
+.post {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    height: 110px;
+}
 
+.post_area {
     padding: 15px 0 15px 0;
     border-bottom: 1px solid #e9e7e7;
 }
@@ -44,8 +55,9 @@
     line-height: 30px; 
 }
 
-.post_header > div:first-child {
+.post_header > h1{
     font-size: 16px;
+    color: #000000;
     font-weight: bold;   
 }
 
@@ -70,4 +82,9 @@
     color: #777
 }
 
+.ant-checkbox-wrapper{
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+}
 

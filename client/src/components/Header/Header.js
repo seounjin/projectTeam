@@ -1,9 +1,9 @@
 import React from 'react';
 import NavBar from './Sections/NavBar.js';
-import './style.css';
-
+import './Header.css';
 
 function Header() {
+    
     return (
         <header>
             <div className="wrapper">

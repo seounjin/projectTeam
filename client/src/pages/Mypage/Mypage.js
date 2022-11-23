@@ -1,38 +1,57 @@
 import React from 'react';
 import SideBar from '../../components/SideBar/SideBar.js';
 import PaginationCmp from '../../components/Pagination/PaginationCmp.js';
-import ModernButton from '../../components/atoms/ModernButton/ModernButton.js';
-import { withRouter } from "react-router-dom";
-import useBoard from '../../hook/useBoard.js';
-import BoardForm from '../../components/BoardForm/BoardForm.js';
+import useBoardState from '../../hook/useBoardState.js';
 import MyPageForm from '../../components/MyPageForm/MyPageForm.js';
+import SelectCard from '../../components/SelectCard/SelectCard.js';
+import MainImg from '../../components/MainImg/MainImg.js';
+import MyInfoCard from './sections/MyInfoCard.js';
+
+import { PATH, CATEGORY_LIST, CATEGORY_DIC, 
+                    ENDPOINT,ININIAL_POSTTYPE, CATEGORY_HANGUL_LIST  } from '../../constants/myPageConstants.js';
 
 import './MyPage.css';
 
-const PATH = "mypage";
-const CATEGORY_LIST = ["category1","category2"];
-const CATEGORY_DIC = {"category1":["postTitle","postContent"],'category2':["postTitle","postContent"]};
-
 function Mypage() {
 
-    const { BoardState, categorySelect, pageSelect } = useBoard({ PATH });
-    
+    const { BoardState, categorySelect, 
+        pageSelect, TotalBoard } = useBoardState({ PATH, ENDPOINT, 
+                                                ININIAL_POSTTYPE, userName:localStorage.getItem('username') });
     return (
-            <section className="boardPage">
+            <section className="myPage">
+                <MyInfoCard/>
                 <div className="wrapper">
-                    <div className="boardPage_area">
-                        <div className="sideBar_area">
-                            {BoardState.currentType && 
-                                <SideBar category={BoardState.currentType} categoryList={CATEGORY_LIST} 
+
+                {TotalBoard && <SelectCard 
+                                CATEGORY_LIST={CATEGORY_LIST}
+                                CATEGORY_HANGUL_LIST={CATEGORY_HANGUL_LIST}
+                                categorySelect={categorySelect}
+                                > </SelectCard>}
+
+                                
+                    <div className="myPage_area">
+                        <div className="myPage_sideBar_area">
+                            {TotalBoard && 
+                                <SideBar category={BoardState.postType} 
+                                CATEGORY_LIST={CATEGORY_LIST}
+                                CATEGORY_HANGUL_LIST={CATEGORY_HANGUL_LIST} 
                                 categorySelect={categorySelect}></SideBar>}
                         </div> 
-                        <div className='posts_area'>
+                        <div className='myPage_posts_area'>
 
-                            {BoardState.posts && <MyPageForm path={PATH} postData={BoardState.posts}
-                             cateGory={CATEGORY_DIC[BoardState.currentType]}> 
+                            {TotalBoard && <MyPageForm path={PATH} 
+                            postData={ TotalBoard.postData }
+                            cateGory={CATEGORY_DIC[BoardState.postType]}
+                            postType={BoardState.postType}
+                            currentPage={BoardState.currentPage} 
+                            CATEGORY_HANGUL_LIST={CATEGORY_HANGUL_LIST}
+                             > 
                              </MyPageForm>}
-                                           
-                            {BoardState.totalPage && <PaginationCmp currentPage={BoardState.currentPage} totalPage={BoardState.totalPage} pageSelect={pageSelect}></PaginationCmp>}    
+
+                            {TotalBoard && <PaginationCmp 
+                            currentPage={BoardState.currentPage} 
+                            totalPages={TotalBoard.totalAmount} 
+                            pageSelect={pageSelect}></PaginationCmp>}    
                         </div>
                     </div>
                 </div>
@@ -41,56 +60,6 @@ function Mypage() {
 
 };
 
-// export default React.memo(Mypage);
 
-export default withRouter(Mypage);
+export default Mypage;
 
-
-// import React from 'react';
-// import SideBar from '../../components/SideBar/SideBar.js';
-// import PaginationCmp from '../../components/Pagination/PaginationCmp.js';
-// import ModernButton from '../../components/atoms/ModernButton/ModernButton.js';
-// import { withRouter } from "react-router-dom";
-// import useBoard from '../../hook/useBoard.js';
-// import BoardForm from '../../components/BoardForm/BoardForm.js';
-
-// import './MyPage.css';
-
-// const PATH = "mypage";
-// const CATEGORY_LIST = ["category1","category2"];
-// const CATEGORY_DIC = {"category1":["postTitle","postContent"],'category2':["postTitle","postContent"]};
-
-// function Mypage() {
-
-//     const { BoardState, categorySelect, pageSelect, handleButtonClick, checkBoxhandler } = useBoard({ PATH });
-
-//     console.log("mypage");
-    
-//     return (
-//             <section className="boardPage">
-//                 <div className="wrapper">
-//                     <div className="boardPage_area">
-//                         <div className="sideBar_area">
-//                         {BoardState.currentType && 
-//                             <SideBar category={BoardState.currentType} categoryList={CATEGORY_LIST} 
-//                             categorySelect={categorySelect}></SideBar>}
-//                         </div> 
-//                         <div className='posts_area'>
-
-//                             {BoardState.posts && <BoardForm path={PATH} postData={BoardState.posts}
-//                              checkList={BoardState.check} checkBoxhandler={checkBoxhandler} 
-//                              cateGory={CATEGORY_DIC[BoardState.currentType]} >
-//                              </BoardForm>}
-
-//                             <ModernButton ButtonName={"삭제"} handleButtonClick={handleButtonClick}></ModernButton>
-                            
-//                             {BoardState.totalPage && <PaginationCmp currentPage={BoardState.currentPage} totalPage={BoardState.totalPage} pageSelect={pageSelect}></PaginationCmp>}    
-//                         </div>
-//                     </div>
-//                 </div>
-//             </section>
-//     );
-
-// };
-
-// export default withRouter(Mypage);

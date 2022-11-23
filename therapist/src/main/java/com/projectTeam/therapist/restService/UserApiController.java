@@ -2,7 +2,10 @@ package com.projectTeam.therapist.restService;
 
 import com.projectTeam.therapist.model.UserDto;
 import com.projectTeam.therapist.userService.UserService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,6 +13,7 @@ import java.util.Map;
 
 // `@RestController`어노테이션을 사용하는 경우, 요청과 응답의 객체변환 및 직렬화/역직렬화를 자동으로 이 jackson 라이브러리가 담당하게 된다.
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api")
 class UserApiController {
     @Autowired
@@ -22,8 +26,13 @@ class UserApiController {
 
     // 마이페이지를 눌렀을때의 요청 API + 작성글 조회
     @GetMapping("/users/{userName}")
-    UserDto findUser(@PathVariable String userName) {
-        return userService.findUser(userName);
+    public ResponseEntity<UserDto> findUser(@PathVariable String userName) {
+        return ResponseEntity.ok(userService.getMyUserWithRoles().get());
+    }
+
+    @GetMapping("/users/info/{userName}")
+    public JSONObject findUserInfo(@PathVariable String userName) {
+        return userService.getUserInfo(userName);
     }
 
     @PostMapping("/users")
@@ -43,7 +52,8 @@ class UserApiController {
 
     // 마이페이지 체크 박스에 따른 게시글 / 댓글 삭제
     @PostMapping("/users/mypage")
-    void deleteMyPosts(@RequestBody Map<Long, Long> posts) {
-        userService.deleteMyPosts(posts);
+    void deleteMyPosts(@RequestBody JSONObject items,
+                       @RequestParam String type) {
+        userService.deleteMyPosts(type, items);
     }
 }

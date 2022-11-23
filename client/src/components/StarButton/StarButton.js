@@ -1,22 +1,19 @@
-import React, { useState }from 'react';
+import React from 'react';
+import useStar from '../../hook/useStar.js';
 import { Rate } from 'antd';
 
-function StarButton() {
+function StarButton({ REPLY_ENDPOINT, id, isCheked, replyStar }) {
 
-    const desc = ['쓰레기', '나쁨', '보통', '좋음', '신'];
-    const [value, stateValue] = useState('')
-
-
-    const handleChange = value => {
-        stateValue(value);
-    };
+    const { StarValue, StarState, handleChange } = useStar({REPLY_ENDPOINT, id});
 
     return (
-        <div>
-            <Rate tooltips={desc} onChange={ handleChange } value={value} />
-            {value ? <span className="ant-rate-text">{desc[value - 1]}</span> : ''}
-        </div>
-    )
+            <div >
+                <Rate onChange={ handleChange }  
+                    disabled={isCheked} 
+                    value={replyStar} />
+                
+            </div>
+        )
 };
 
-export default StarButton;
+export default React.memo(StarButton);

@@ -1,7 +1,7 @@
 
 
 .resent_board_section {
-    width: 100%;
+    position: relative;
     margin-top: 1.5rem;
 }
 
@@ -38,9 +38,11 @@
 }
 
 @media only screen and (max-width: 980px) {
+
+
     .resent_board_area {
         height: 100%;
-        margin: 0;
+        margin: 0 0.2rem 0 0.2rem;
         padding-top: 1.7rem;
     }
     

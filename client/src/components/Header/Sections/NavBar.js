@@ -1,15 +1,16 @@
 import React from 'react'
 import LeftMenu from './NavBarSection/LeftMenu.js';
 import RightMenu from './NavBarSection/RightMenu.js';
-import './NavBarSection/css/style.css';
+import './NavBar.css';
 
 
 function NavBar() {
+
+    
     return (
         <nav>
-            
             <div className="nav_logo">
-                <div>Home</div>
+                <a href="/">Home</a>
             </div>
             
             <div className="nav_menu">

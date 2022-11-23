@@ -1,60 +1,58 @@
-import React, { useState } from 'react'
-import api from '../api/boardApi.js';
+import React, { useState } from 'react';
+import ModalForm from '../components/Modal/ModalForm.js'
+import { modalCase } from '../utils/modalCase';
+import { DELETE_MODALTEXT, STAR_MODALTEXT } from '../constants/modalConstants';
+import { useHistory } from 'react-router-dom';
 
-export default function useModal({ CheckState }) {
+function useModal() {
 
-    const [visible, setVisible] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [Visible, setVisible] = useState(false);
+    const [EndpointState, setEndpointState] = useState("");
+    const [PathState, setPathState] = useState("");
+    const [ModalType, setModalType] = useState("");
+    const history = useHistory();
 
-    const stateCheck = () => {
-        let cnt = 0;
-        for(let index = 0; index < CheckState.length; index++ ){
-            if (!CheckState[index]){
-                cnt += 1;
-            }
-        };
 
-        if (cnt === CheckState.length) { return false; }
-        else { return true };
+    const showDeleteModal = async(path, id) => {
+
+        const endpoint = path + '/' + id;
+
+        setModalType(DELETE_MODALTEXT);
+        setPathState(path);
+        setEndpointState(endpoint);
+        setVisible(true);
     };
+    
 
-    const showModal = async() => {
+    const showStarModal = async(path, star, replyId) => {
+        const endpoint = `star/${replyId}?point=${star}`
 
-        const res = await stateCheck();
-
-        if (res){
-            setVisible(true);            
-        } else {
-            alert("삭제할 내용을 체크해주세요")
-            setVisible(false);
-        }
-
-    };
-
-    const dataProcessing = () => {
-        const deleteData = CheckState.map((data,index) => { return data === true ? index : null })
-        .filter( data => data) 
-   
-        return {...deleteData};
+        setModalType(STAR_MODALTEXT);
+        setPathState(path);
+        setEndpointState(endpoint);
+        setVisible(true);
     };
 
     const handleOk = async() => {
 
-        const checkData = await dataProcessing();
-        const response = await api.fetchDeletePost(checkData);
-        if (response){
-            setConfirmLoading(true);
-            setVisible(false);
-            setConfirmLoading(false);
-        }       
+        await modalCase(PathState, EndpointState, history);
+        setVisible(false);
     };
 
     const handleCancel = () => {
         setVisible(false);
     };
 
-    return { showModal, handleOk, handleCancel, visible, confirmLoading };
+
+    const renderModal = () => (
+        <ModalForm modalText={ ModalType }
+                            handleOk={ handleOk } 
+                            handleCancel={ handleCancel } 
+                            visible= { Visible } />
+     );
+
+     
+    return { renderModal, showDeleteModal, showStarModal };
 };
 
-
-    
+export default useModal;

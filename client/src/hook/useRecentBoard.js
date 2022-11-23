@@ -1,26 +1,15 @@
-import { useState, useEffect } from 'react';
-import mainApi from '../api/mainApi.js';
+import useQuery from './useQuery.js';
+
+const MAIN_ENDPOINT = '/main/posts';
+
 
 function useRecentBoard() {
 
-    const [PostState, setBoardState] = useState(null);
-    
-    useEffect(() => {
-        fetchRecentBoard();
-    }, []);
-
-    const fetchRecentBoard = async () => {
-
-        const response = await mainApi.fetchRecentBoard();
-        setBoardState(response);
-    };
-
-    const openBoard = () => {
-        console.log("openBoard")
-    };
-
-    return [PostState, openBoard];
+    const PostState = useQuery(MAIN_ENDPOINT);
+  
+    return PostState;
 
 };
 
 export default useRecentBoard;
+

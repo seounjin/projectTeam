@@ -1,38 +1,56 @@
 import React from 'react';
 import SideBar from '../../components/SideBar/SideBar.js';
 import PaginationCmp from '../../components/Pagination/PaginationCmp.js';
-import SearchInput from '../../components/atoms/SearchInput/SearchInput.js'
 import WriteButton from '../../components/WriteButton/WriteButton.js';
-import BoardForm from '../../components/BoardForm/BoardForm.js'
-import useBoard from '../../hook/useBoard.js';
-import useCheckBox from '../../hook/useCheckBox.js';
-import { withRouter } from "react-router-dom";
+import BoardForm from '../../components/BoardForm/BoardForm.js';
+import SelectCard from '../../components/SelectCard/SelectCard.js';
+import useBoardState from '../../hook/useBoardState.js';
+import { PATH, CATEGORY_LIST, 
+        ENDPOINT, ININIAL_POSTTYPE, CATEGORY_HANGUL_LIST } from '../../constants/boardPageConstants.js';
+import MainImg from '../../components/MainImg/MainImg.js';
 
 import './BoardPage.css';
 
-const PATH = "board"
-const CATEGORY_LIST = ["category1","category2","category3","category4"];
-const CATEGORY_DIC = {"category1":["postTitle","postContent"],'category2':["postTitle","postContent"]};
 
 function BoardPage() {
+    const { BoardState, categorySelect, 
+        pageSelect, TotalBoard } = useBoardState({ PATH, ENDPOINT, ININIAL_POSTTYPE });
 
-    const { BoardState, categorySelect, pageSelect } = useBoard({ PATH });
-
+    
 
     return (
             <section className="boardPage">
+                <MainImg/>
                 <div className="wrapper">
+
+                    {TotalBoard && <SelectCard 
+                                CATEGORY_LIST={CATEGORY_LIST}
+                                CATEGORY_HANGUL_LIST={CATEGORY_HANGUL_LIST}
+                                categorySelect={categorySelect}> </SelectCard>}
+
                     <div className="boardPage_area">
+                        
                         <div className="sideBar_area">
-                        {BoardState.currentType && 
-                            <SideBar category={BoardState.currentType}
-                                    categoryList={CATEGORY_LIST} categorySelect={categorySelect}></SideBar>}
+                        {TotalBoard && 
+                            <SideBar category={BoardState.postType}
+                                    CATEGORY_LIST={CATEGORY_LIST} 
+                                    categorySelect={categorySelect}
+                                    CATEGORY_HANGUL_LIST={CATEGORY_HANGUL_LIST}
+                                    ></SideBar>}
                         </div> 
+
                         <div className='posts_area'>
-                        {BoardState.posts && <BoardForm path={PATH} postData={BoardState.posts}
-                                                                    cateGory={CATEGORY_DIC[BoardState.currentType]}></BoardForm>}
-                        <WriteButton></WriteButton>
-                        {BoardState.totalPage && <PaginationCmp currentPage={BoardState.currentPage} totalPage={BoardState.totalPage} pageSelect={pageSelect}></PaginationCmp>}    
+                            {TotalBoard && <BoardForm path={PATH} 
+                                            postData={TotalBoard.posts} 
+                                            currentPage={BoardState.currentPage}
+                                            cateGory={BoardState.postType}
+                                            CATEGORY_HANGUL_LIST={CATEGORY_HANGUL_LIST}
+                                            ></BoardForm>}
+                            
+                            {TotalBoard && <WriteButton></WriteButton>}
+                            {TotalBoard && 
+                            <PaginationCmp currentPage={BoardState.currentPage} 
+                                totalPages={TotalBoard.totalAmount} pageSelect={pageSelect}></PaginationCmp>}    
                         </div>
                     </div>
                 </div>
@@ -40,4 +58,6 @@ function BoardPage() {
     );
 };
 
-export default withRouter(BoardPage);
+export default BoardPage;
+
+

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api")
 public class MyPageApiController {
@@ -14,7 +15,12 @@ public class MyPageApiController {
     private UserService userService;
 
     @GetMapping("/mypage/{userName}")
-    public JSONObject requestPostsOrCommentsOrReplies(@PathVariable String userName, @RequestParam(required = false, defaultValue = "myPosts") String menuType, @PageableDefault(size = 6) final Pageable pageable) {
-        return userService.searchMyData(userName, menuType, pageable);
+    public JSONObject requestPostsOrCommentsOrReplies(@PathVariable String userName, @RequestParam(required = false, defaultValue = "myPosts") String menuType) {
+        return userService.searchMyData(userName, menuType);
+    }
+
+    @GetMapping("/mypage/info/{userName}")
+    public JSONObject requestUserInfo(@PathVariable String userName) {
+        return userService.getUserInfo(userName);
     }
 }
